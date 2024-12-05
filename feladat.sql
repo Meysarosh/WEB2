@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 06:28 PM
+-- Generation Time: Dec 05, 2024 at 01:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,9 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `feladat`
 --
-CREATE DATABASE IF NOT EXISTS feladat DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-USE feladat;
 -- --------------------------------------------------------
 
 --
@@ -44,6 +42,46 @@ INSERT INTO `helyseg` (`az`, `nev`, `orszag`) VALUES
 (2, 'Djerba', 'Tunézia'),
 (3, 'Sharm El Sheikh', 'Egyiptom'),
 (4, 'Hurghada', 'Egyiptom');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu`
+--
+
+CREATE TABLE `menu` (
+  `id` int(11) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `route` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu`
+--
+
+INSERT INTO `menu` (`id`, `parent_id`, `name`, `route`, `role`) VALUES
+(1, NULL, 'Főoldal', 'home', 'ROLE_GUEST'),
+(2, NULL, 'Bejelentkezés', 'login', 'ROLE_GUEST'),
+(3, NULL, 'Regisztráció', 'register', 'ROLE_GUEST'),
+(4, NULL, 'SOAP', NULL, 'ROLE_USER'),
+(5, NULL, 'MNB', NULL, 'ROLE_USER'),
+(6, NULL, 'Restful', NULL, 'ROLE_USER'),
+(7, NULL, 'Admin', NULL, 'ROLE_ADMIN'),
+(8, 4, 'SOAP-szerver', 'soap_server', 'ROLE_USER'),
+(9, 4, 'SOAP-kliens', 'soap_client', 'ROLE_USER'),
+(10, 5, 'Árfolyam', 'mnb_rates', 'ROLE_USER'),
+(11, 5, 'Táblázat', 'mnb_table', 'ROLE_USER'),
+(12, 5, 'Grafikon', 'mnb_chart', 'ROLE_USER'),
+(13, 6, 'Restful-szerver', 'rest_server', 'ROLE_USER'),
+(14, 6, 'Restful-kliens', 'rest_client', 'ROLE_USER'),
+(15, 7, 'Felhasználók', 'admin_users', 'ROLE_ADMIN'),
+(16, 7, 'Hozzáad', 'admin_add_user', 'ROLE_ADMIN'),
+(17, 7, 'Módosít', 'admin_edit_user', 'ROLE_ADMIN'),
+(18, 7, 'Töröl', 'admin_delete_user', 'ROLE_ADMIN'),
+(19, NULL, 'Kijelentkezés', 'logout', 'ROLE_USER'),
+(55, NULL, 'PDF', 'generate_pdf', 'ROLE_USER');
 
 -- --------------------------------------------------------
 
@@ -552,7 +590,6 @@ INSERT INTO `tavasz` (`sorszam`, `szalloda_az`, `indulas`, `idotartam`, `ar`) VA
 (452, 'TA', '2011.04.13', 8, 157900),
 (453, 'TA', '2011.04.13', 15, 230900),
 (454, 'TA', '2011.04.20', 8, 125900),
-(455, 'TA', '2011.04.20', 15, 200900),
 (456, 'TA', '2011.04.27', 8, 125900);
 
 -- --------------------------------------------------------
@@ -574,9 +611,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
-(1, 'Admin', 'admin@gmail.com', '$2a$10$QEaf3I.eLiZC4F4pDnqmC.sTysFlJ59wgROmw3ATxceFs/wgg0LvK', 'ROLE_ADMIN'),
-(2, 'User', 'user@gmail.com', '$2a$10$exVjZOnYQ3oFdNTFP7qVHOoL8K2XhKpWXY3r8duw8v9pTNxmC0qbm', 'ROLE_USER'),
-
+(17, 'Admin', 'admin@gmail.com', '$2y$10$XmLIKPY8dNdhkjhKIpusw.TxC5LguPrZGvbgJbYTD9CISKlzsZfiW', 'ROLE_ADMIN'),
+(18, 'User', 'user@gmail.com', '$2y$10$kkbdnBj0Ia5MQHIkj6JW1uK8Er1BOotdJiIn3CZ5L.nG/lUHuLj8.', 'ROLE_USER'),
+(22, 'Roman', 'roman@gmail.com', '$2y$10$FFlEBt49g/naeYJtN8EHMuP4dlGCWf/y8BUHTeyiPXAqgsS6HDzf.', 'ROLE_USER');
 
 --
 -- Indexes for dumped tables
@@ -587,6 +624,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
 --
 ALTER TABLE `helyseg`
   ADD PRIMARY KEY (`az`);
+
+--
+-- Indexes for table `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent_id` (`parent_id`);
 
 --
 -- Indexes for table `szalloda`
@@ -613,16 +657,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
+--
 -- AUTO_INCREMENT for table `tavasz`
 --
 ALTER TABLE `tavasz`
-  MODIFY `sorszam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=457;
+  MODIFY `sorszam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables
