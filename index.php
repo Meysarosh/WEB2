@@ -3,13 +3,10 @@ require_once __DIR__ . '/config.php';
 
 session_start();
 
-// Set the page title
 $title = 'Utazási Iroda';
 
-// Determine which page to load
-$page = $_GET['page'] ?? 'home'; // Default to 'home'
+$page = $_GET['page'] ?? 'home';
 
-// Start output buffering for dynamic content
 ob_start();
 
 switch ($page) {
@@ -37,20 +34,19 @@ switch ($page) {
         require_once SERVER_ROOT . 'controllers/soap_client.php';
         break;
 
-    // MNB logic cases
+  
     case 'mnb_rates':
-        require_once SERVER_ROOT . 'controllers/mnb_rates.php'; // Handles logic and passes data to the view
+        require_once SERVER_ROOT . 'controllers/mnb_rates.php'; 
         break;
 
     case 'mnb_table':
-        require_once SERVER_ROOT . 'controllers/mnb_table.php'; // Handles logic and passes data to the view
+        require_once SERVER_ROOT . 'controllers/mnb_table.php'; 
         break;
 
     case 'mnb_chart':
-        require_once SERVER_ROOT . 'controllers/mnb_chart.php'; // Handles logic and passes data to the view
+        require_once SERVER_ROOT . 'controllers/mnb_chart.php'; 
         break;
 
-    // RESTful functionality
     case 'rest_server':
         require_once SERVER_ROOT . 'views/rest_server.php';
         break;
@@ -59,7 +55,6 @@ switch ($page) {
         require_once SERVER_ROOT . 'views/rest_client.php';
         break;
 
-    // Admin functionality
     case 'admin_users':
         require_once SERVER_ROOT . 'views/admin/users.php';
         break;
@@ -81,14 +76,11 @@ switch ($page) {
         break;
 
     default:
-        // Handle 404 error
         http_response_code(404);
         require_once SERVER_ROOT . 'views/404.php';
         break;
 }
 
-// Capture the content for the layout
 $content = ob_get_clean();
 
-// Include the layout file
 require SERVER_ROOT . 'layout.php';
