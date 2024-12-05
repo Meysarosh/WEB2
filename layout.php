@@ -1,10 +1,11 @@
 <?php
-require_once __DIR__ . '/config.php'; // Include config using relative path
-require_once SERVER_ROOT . 'helpers/menu_helper.php';
+require_once __DIR__ . '/helpers/menu_helper.php';
 
-$role = $_SESSION['role'] ?? 'ROLE_GUEST'; // Default to guest
+
+$role = $_SESSION['role'] ?? 'ROLE_GUEST'; // Default to guest if not logged in
 $menus = getMenu($role);
 ?>
+
 <!doctype html>
 <html lang="hu" class="h-100">
 <head>

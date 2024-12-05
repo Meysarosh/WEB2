@@ -1,18 +1,14 @@
 <?php
 $title = 'Bejelentkezés'; // Page title for layout
-
-// Fetch error messages from the session
-$error = $_SESSION['login_error'] ?? null;
-
-// Clear the error after displaying it
-unset($_SESSION['login_error']);
 ?>
+<h1 class="text-center">Bejelentkezés</h1>
 
-<h2 class="text-center mt-4">Bejelentkezés</h2>
-
-<?php if ($error): ?>
-    <div class="alert alert-danger text-center" role="alert">
-        <?php echo htmlspecialchars($error); ?>
+<?php if (!empty($_SESSION['login_error'])): ?>
+    <div class="alert alert-danger text-center">
+        <?php 
+        echo htmlspecialchars($_SESSION['login_error']); 
+        unset($_SESSION['login_error']); // Clear the error after displaying
+        ?>
     </div>
 <?php endif; ?>
 
@@ -25,5 +21,5 @@ unset($_SESSION['login_error']);
         <label for="password" class="form-label">Jelszó:</label>
         <input type="password" class="form-control" id="password" name="password" required>
     </div>
-    <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
+    <button type="submit" class="btn btn-primary">Bejelentkezés</button>
 </form>

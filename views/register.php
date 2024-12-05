@@ -2,6 +2,25 @@
 $title = 'Regisztráció'; // Page title for layout
 ?>
 <h1 class="text-center">Regisztráció</h1>
+
+<?php if (!empty($_SESSION['register_error'])): ?>
+    <div class="alert alert-danger text-center">
+        <?php 
+        echo htmlspecialchars($_SESSION['register_error']); 
+        unset($_SESSION['register_error']); // Clear the error after displaying
+        ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($_SESSION['register_success'])): ?>
+    <div class="alert alert-success text-center">
+        <?php 
+        echo htmlspecialchars($_SESSION['register_success']); 
+        unset($_SESSION['register_success']); // Clear the message after displaying
+        ?>
+    </div>
+<?php endif; ?>
+
 <form action="controllers/register.php" method="POST" class="mt-4">
     <div class="mb-3">
         <label for="name" class="form-label">Név:</label>

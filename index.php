@@ -12,32 +12,75 @@ $page = $_GET['page'] ?? 'home'; // Default to 'home'
 // Start output buffering for dynamic content
 ob_start();
 
-// Map the page to the corresponding file
-$pageFile = match ($page) {
-    'home' => SERVER_ROOT . 'views/home.php',
-    'login' => SERVER_ROOT . 'views/login.php',
-    'register' => SERVER_ROOT . 'views/register.php',
-    'logout' => SERVER_ROOT . 'controllers/logout.php',
-    'soap_server' => SERVER_ROOT . 'controllers/soap_server.php',
-    'soap_client' => SERVER_ROOT . 'controllers/soap_client.php',
-    'mnb_rates' => SERVER_ROOT . 'views/mnb_rates.php',
-    'mnb_table' => SERVER_ROOT . 'views/mnb_table.php',
-    'mnb_chart' => SERVER_ROOT . 'views/mnb_chart.php',
-    'rest_server' => SERVER_ROOT . 'controllers/rest_server.php',
-    'rest_client' => SERVER_ROOT . 'controllers/rest_client.php',
-    'admin_users' => SERVER_ROOT . 'views/admin/users.php',
-    'admin_add_user' => SERVER_ROOT . 'views/admin/add_user.php',
-    'admin_edit_user' => SERVER_ROOT . 'views/admin/edit_user.php',
-    'admin_delete_user' => SERVER_ROOT . 'views/admin/delete_user.php',
-    default => null,
-};
+switch ($page) {
+    case 'home':
+        require_once SERVER_ROOT . 'views/home.php';
+        break;
 
-// Include the requested page file if it exists
-if ($pageFile && file_exists($pageFile)) {
-    require $pageFile;
-} else {
-    echo "<h1>404 - Az oldal nem található</h1>";
-    echo "<p>A kért oldal nem létezik.</p>";
+    case 'login':
+        require_once SERVER_ROOT . 'views/login.php';
+        break;
+
+    case 'register':
+        require_once SERVER_ROOT . 'views/register.php';
+        break;
+
+    case 'logout':
+        require_once SERVER_ROOT . 'controllers/logout.php';
+        break;
+
+    case 'soap_server':
+        require_once SERVER_ROOT . 'controllers/soap_server.php';
+        break;
+
+    case 'soap_client':
+        require_once SERVER_ROOT . 'controllers/soap_client.php';
+        break;
+
+    // MNB logic cases
+    case 'mnb_rates':
+        require_once SERVER_ROOT . 'controllers/mnb_rates.php'; // Handles logic and passes data to the view
+        break;
+
+    case 'mnb_table':
+        require_once SERVER_ROOT . 'controllers/mnb_table.php'; // Handles logic and passes data to the view
+        break;
+
+    case 'mnb_chart':
+        require_once SERVER_ROOT . 'controllers/mnb_chart.php'; // Handles logic and passes data to the view
+        break;
+
+    // RESTful functionality
+    case 'rest_server':
+        require_once SERVER_ROOT . 'controllers/rest_server.php';
+        break;
+
+    case 'rest_client':
+        require_once SERVER_ROOT . 'controllers/rest_client.php';
+        break;
+
+    // Admin functionality
+    case 'admin_users':
+        require_once SERVER_ROOT . 'views/admin/users.php';
+        break;
+
+    case 'admin_add_user':
+        require_once SERVER_ROOT . 'views/admin/add_user.php';
+        break;
+
+    case 'admin_edit_user':
+        require_once SERVER_ROOT . 'views/admin/edit_user.php';
+        break;
+
+    case 'admin_delete_user':
+        require_once SERVER_ROOT . 'views/admin/delete_user.php';
+        break;
+
+    default:
+        // Handle 404 error
+        http_response_code(404);
+        require_once SERVER_ROOT . 'views/404.php';
+        break;
 }
 
 // Capture the content for the layout
