@@ -7,6 +7,8 @@ if (!isset($_SESSION['role'])) {
 }
 ?>
 <h1 class="text-center">PDF Generálás</h1>
+<div class="row">
+        <div class="col-md-6 mx-auto">
 <form action="controllers/generate_pdf.php" method="POST" class="mt-4">
     <div class="mb-3">
         <label for="location" class="form-label">Helyszín (opcionális):</label>
@@ -26,3 +28,4 @@ if (!isset($_SESSION['role'])) {
     </div>
     <button type="submit" class="btn btn-primary">Generálás</button>
 </form>
+</div></div>

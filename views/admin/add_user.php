@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <h1 class="text-center">Új felhasználó hozzáadása</h1>
+<div class="row">
+        <div class="col-md-6 mx-auto">
 <form method="POST">
     <div class="mb-3">
         <label for="name" class="form-label">Név:</label>
@@ -47,3 +49,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <button type="submit" class="btn btn-primary">Hozzáadás</button>
 </form>
+</div></div>

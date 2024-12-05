@@ -41,7 +41,11 @@ $title = 'RESTful Kliens';
             <label for="password" class="form-label">Jelszó:</label>
             <input type="password" name="password" class="form-control mb-2" required>
             <label for="role" class="form-label">Szerepkör:</label>
-            <input type="text" name="role" class="form-control mb-2" required>
+                <select id="role" name="role" class="form-select" required>
+                    <option value="">Válasszon szerepkört...</option>
+                    <option value="ROLE_USER" <?php echo (isset($_POST['role']) && $_POST['role'] === 'ROLE_USER') ? 'selected' : ''; ?>>Felhasználó</option>
+                    <option value="ROLE_ADMIN" <?php echo (isset($_POST['role']) && $_POST['role'] === 'ROLE_ADMIN') ? 'selected' : ''; ?>>Adminisztrátor</option>
+                </select>
             <button type="submit" name="action" value="createUser" class="btn btn-success">Létrehozás</button>
         </form>
     </div>
@@ -58,7 +62,11 @@ $title = 'RESTful Kliens';
             <label for="email" class="form-label">Email:</label>
             <input type="email" name="email" class="form-control mb-2" required>
             <label for="role" class="form-label">Szerepkör:</label>
-            <input type="text" name="role" class="form-control mb-2" required>
+            <select id="role" name="role" class="form-select" required>
+                    <option value="">Válasszon szerepkört...</option>
+                    <option value="ROLE_USER" <?php echo (isset($_POST['role']) && $_POST['role'] === 'ROLE_USER') ? 'selected' : ''; ?>>Felhasználó</option>
+                    <option value="ROLE_ADMIN" <?php echo (isset($_POST['role']) && $_POST['role'] === 'ROLE_ADMIN') ? 'selected' : ''; ?>>Adminisztrátor</option>
+            </select>   
             <button type="submit" name="action" value="updateUser" class="btn btn-warning">Frissítés</button>
         </form>
     </div>
