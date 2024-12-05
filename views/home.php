@@ -1,5 +1,5 @@
 <?php
-$title = 'Főoldal - Utazási Iroda'; // Page title for layout
+$title = 'Főoldal - Utazási Iroda'; 
 ?>
 
 <div class="container mt-4">

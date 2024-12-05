@@ -4,7 +4,7 @@ require_once __DIR__ . '/config.php';
 session_start();
 
 // Set the page title
-$title = 'Webalkalmazás';
+$title = 'Utazási Iroda';
 
 // Determine which page to load
 $page = $_GET['page'] ?? 'home'; // Default to 'home'
