@@ -1,56 +1,60 @@
 <?php
-session_start();
-require '../../db.php';
+$title = 'Felhasználó módosítása'; // Page title for layout
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ROLE_ADMIN') {
-    header("Location: ../dashboard.php");
+require_once __DIR__ . '/../../db.php';
+
+// Check if the user is an admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+    header("Location: index.php?page=home");
     exit;
 }
 
-$id = $_GET['id'];
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$id = $_GET['id'] ?? null;
+
+if (!$id) {
+    echo "Érvénytelen felhasználó ID!";
+    exit;
+}
+
+$stmt = $pdo->prepare("SELECT id, name, email, role FROM users WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
-    echo "User not found!";
+    echo "Felhasználó nem található!";
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $role = $_POST['role'];
 
     $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?");
     if ($stmt->execute([$name, $email, $role, $id])) {
-        header("Location: users.php");
+        header("Location: index.php?page=admin_users");
         exit;
     } else {
-        echo "Error updating user!";
+        echo "Hiba történt a felhasználó frissítése során!";
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
-</head>
-<body>
-    <h1>Edit User</h1>
-    <a href="users.php">Back to User List</a>
-    <form method="POST">
-        <label>Name:</label><input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required><br>
-        <label>Email:</label><input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required><br>
-        <label>Role:</label>
-        <select name="role" required>
-            <option value="ROLE_USER" <?php echo $user['role'] === 'ROLE_USER' ? 'selected' : ''; ?>>User</option>
-            <option value="ROLE_ADMIN" <?php echo $user['role'] === 'ROLE_ADMIN' ? 'selected' : ''; ?>>Admin</option>
-        </select><br>
-        <button type="submit">Update User</button>
-    </form>
-</body>
-</html>
+<h1 class="text-center">Felhasználó módosítása</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">Név:</label>
+        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+    </div>
+    <div class="mb-3">
+        <label for="role" class="form-label">Szerepkör:</label>
+        <select id="role" name="role" class="form-select">
+            <option value="ROLE_USER" <?php echo $user['role'] === 'ROLE_USER' ? 'selected' : ''; ?>>Felhasználó</option>
+            <option value="ROLE_ADMIN" <?php echo $user['role'] === 'ROLE_ADMIN' ? 'selected' : ''; ?>>Adminisztrátor</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Frissítés</button>
+</form>
