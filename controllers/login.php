@@ -1,34 +1,40 @@
 <?php
-require '../db.php'; // Include the database connection
+require_once __DIR__ . '/../config.php'; // Include config file using a relative path
+require_once SERVER_ROOT . 'db.php'; // Use SERVER_ROOT after config.php is loaded
 
-session_start(); // Start the session to store user info
+// Start the session if it's not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Fetch user from the database
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (empty($email) || empty($password)) {
+        $_SESSION['login_error'] = "Minden mezőt ki kell tölteni!";
+        header("Location: " . SITE_ROOT . "index.php?page=login");
+        exit;
+    }
+
+    $query = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $query->execute([$email]);
+    $user = $query->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password'])) {
-        // Password is correct
-        $_SESSION['user'] = [
-            'id' => $user['id'],
-            'name' => $user['name'],
-            'role' => $user['role']
-        ];
-        header("Location: ../views/dashboard.php"); // Redirect to a dashboard or home page
+        // Login successful
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
+        header("Location: " . SITE_ROOT . "index.php?page=home");
         exit;
     } else {
-        echo "Invalid email or password!";
+        $_SESSION['login_error'] = "Helytelen email vagy jelszó!";
+        header("Location: " . SITE_ROOT . "index.php?page=login");
+        exit;
     }
 }
-?>
-<!-- Login form -->
-<form method="POST">
-    <label>Email:</label><input type="email" name="email" required>
-    <label>Password:</label><input type="password" name="password" required>
-    <button type="submit">Login</button>
-</form>
+
+// Redirect to home page if accessed directly
+header("Location: " . SITE_ROOT . "index.php?page=home");
+exit;

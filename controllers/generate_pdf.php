@@ -1,6 +1,6 @@
 <?php
-require '../db.php';
-require '../libs/tcpdf/tcpdf.php';
+require __DIR__ .'/../db.php';
+require __DIR__ .'/../libs/tcpdf/tcpdf.php';
 
 $location = $_POST['location'];
 $input1 = $_POST['input1'];

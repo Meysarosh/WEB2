@@ -1,5 +1,5 @@
 <?php
-require '../db.php'; // Include the database connection
+require __DIR__ .'/../db.php'; // Include the database connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
