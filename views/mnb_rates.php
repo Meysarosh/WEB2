@@ -9,6 +9,9 @@ $title = 'Árfolyam lekérdezés'; // Page title for layout
         <?php echo htmlspecialchars($error); ?>
     </div>
 <?php endif; ?>
+<div class="row">
+<div class="col-md-6 mx-auto">
+
 
 <form method="POST" action="index.php?page=mnb_rates" class="mb-4">
     <div class="mb-3">
@@ -25,7 +28,8 @@ $title = 'Árfolyam lekérdezés'; // Page title for layout
     </div>
     <button type="submit" class="btn btn-primary">Lekérdezés</button>
 </form>
-
+</div>
+</div>
 <?php if (!empty($rates)): ?>
     <h2>Eredmény:</h2>
     <p><strong>Dátum:</strong> <?php echo htmlspecialchars($rates[0]['date']); ?></p>

@@ -46,13 +46,17 @@ try {
                     $indulas = $_POST['indulas'];
                     $idotartam = (int)$_POST['idotartam'];
                     $ar = (int)$_POST['ar'];
-                    $szallodaAz = (int)$_POST['szallodaAz'];
+                    $szallodaAz = $_POST['szallodaAz'];
 
-                    $result = $client->add($indulas, $idotartam, $ar, $szallodaAz);
-                    $_SESSION['soap_result'] = [
-                        'action' => 'add',
-                        'data' => $result ? 'Record added successfully.' : 'Failed to add record.',
-                    ];
+                    try {
+                        $result = $client->add($indulas, $idotartam, $ar, $szallodaAz);
+                        $_SESSION['soap_result'] = [
+                            'action' => 'add',
+                            'data' => $result ? 'Record added successfully.' : 'Failed to add record.',
+                        ];
+                    } catch (SoapFault $e) {
+                        $_SESSION['soap_error'] = 'SOAP Error during Add operation: ' . $e->getMessage();
+                    }
                 } else {
                     $_SESSION['soap_error'] = 'Please fill all fields for the Add operation.';
                 }
@@ -64,13 +68,17 @@ try {
                     $indulas = $_POST['indulas'];
                     $idotartam = (int)$_POST['idotartam'];
                     $ar = (int)$_POST['ar'];
-                    $szallodaAz = (int)$_POST['szallodaAz'];
+                    $szallodaAz = $_POST['szallodaAz'];
 
-                    $result = $client->update($sorszam, $indulas, $idotartam, $ar, $szallodaAz);
-                    $_SESSION['soap_result'] = [
-                        'action' => 'update',
-                        'data' => $result ? 'Record updated successfully.' : 'Failed to update record.',
-                    ];
+                    try {
+                        $result = $client->update($sorszam, $indulas, $idotartam, $ar, $szallodaAz);
+                        $_SESSION['soap_result'] = [
+                            'action' => 'update',
+                            'data' => $result ? 'Record updated successfully.' : 'Failed to update record.',
+                        ];
+                    } catch (SoapFault $e) {
+                        $_SESSION['soap_error'] = 'SOAP Error during Update operation: ' . $e->getMessage();
+                    }
                 } else {
                     $_SESSION['soap_error'] = 'Please fill all fields for the Update operation.';
                 }
@@ -79,11 +87,16 @@ try {
             case 'delete':
                 if (!empty($_POST['sorszam'])) {
                     $sorszam = (int)$_POST['sorszam'];
-                    $result = $client->delete($sorszam);
-                    $_SESSION['soap_result'] = [
-                        'action' => 'delete',
-                        'data' => $result ? 'Record deleted successfully.' : 'Failed to delete record.',
-                    ];
+
+                    try {
+                        $result = $client->delete($sorszam);
+                        $_SESSION['soap_result'] = [
+                            'action' => 'delete',
+                            'data' => $result ? 'Record deleted successfully.' : 'Failed to delete record.',
+                        ];
+                    } catch (SoapFault $e) {
+                        $_SESSION['soap_error'] = 'SOAP Error during Delete operation: ' . $e->getMessage();
+                    }
                 } else {
                     $_SESSION['soap_error'] = 'Please provide a valid ID for the Delete operation.';
                 }

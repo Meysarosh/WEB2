@@ -8,7 +8,12 @@ $title = 'Grafikon'; // Page title
     <div class="row">
         <div class="col-md-4">
             <label for="currencies" class="form-label">Devizapár:</label>
-            <input type="text" id="currencies" name="currencies" class="form-control" placeholder="Pl. EUR,USD" value="<?php echo htmlspecialchars($_POST['currencies'] ?? ''); ?>">
+            <select id="currencies" name="currencies" class="form-select">
+                <option value="">Válasszon devizapárt...</option>
+                <option value="EUR,HUF" <?php echo (isset($_POST['currencies']) && $_POST['currencies'] === 'EUR,HUF') ? 'selected' : ''; ?>>EUR/HUF</option>
+                <option value="USD,HUF" <?php echo (isset($_POST['currencies']) && $_POST['currencies'] === 'USD,HUF') ? 'selected' : ''; ?>>USD/HUF</option>
+                <option value="GBP,HUF" <?php echo (isset($_POST['currencies']) && $_POST['currencies'] === 'GBP,HUF') ? 'selected' : ''; ?>>GBP/HUF</option>
+            </select>
         </div>
         <div class="col-md-3">
             <label for="year" class="form-label">Év:</label>
