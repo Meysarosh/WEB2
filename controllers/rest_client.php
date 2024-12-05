@@ -1,89 +1,79 @@
 <?php
+require_once __DIR__ . '/../config.php'; // Configuration file
+require_once SERVER_ROOT . 'libs/RestClient.php'; // Correct path to RestClient class
 
-class RestClient {
-    private $baseUrl;
+session_start();
 
-    public function __construct($baseUrl) {
-        $this->baseUrl = rtrim($baseUrl, '/');
-    }
+$client = new RestClient(SITE_ROOT);
 
-    private function sendRequest($endpoint, $method, $data = null) {
-        $url = $this->baseUrl . $endpoint;
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+        $action = $_POST['action'];
+        $result = null;
 
-        $ch = curl_init($url);
+        switch ($action) {
+            case 'getUsers':
+                $result = $client->getUsers();
+                break;
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+            case 'getUserById':
+                if (!empty($_POST['id'])) {
+                    $id = (int)$_POST['id'];
+                    $result = $client->getUserById($id);
+                } else {
+                    $_SESSION['rest_error'] = 'Kérjük, adjon meg egy érvényes ID-t!';
+                }
+                break;
 
-        if ($data) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            case 'createUser':
+                if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['role'])) {
+                    $data = [
+                        'name' => $_POST['name'],
+                        'email' => $_POST['email'],
+                        'password' => $_POST['password'],
+                        'role' => $_POST['role'],
+                    ];
+                    $result = $client->createUser($data);
+                } else {
+                    $_SESSION['rest_error'] = 'Minden mezőt ki kell tölteni a felhasználó létrehozásához!';
+                }
+                break;
+
+            case 'updateUser':
+                if (!empty($_POST['id']) && !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['role'])) {
+                    $data = [
+                        'id' => (int)$_POST['id'],
+                        'name' => $_POST['name'],
+                        'email' => $_POST['email'],
+                        'role' => $_POST['role'],
+                    ];
+                    $result = $client->updateUser($data);
+                } else {
+                    $_SESSION['rest_error'] = 'Minden mezőt ki kell tölteni a felhasználó frissítéséhez!';
+                }
+                break;
+
+            case 'deleteUser':
+                if (!empty($_POST['id'])) {
+                    $id = (int)$_POST['id'];
+                    $result = $client->deleteUser($id);
+                } else {
+                    $_SESSION['rest_error'] = 'Kérjük, adjon meg egy érvényes ID-t a törléshez!';
+                }
+                break;
+
+            default:
+                $_SESSION['rest_error'] = 'Érvénytelen művelet!';
         }
 
-        $response = curl_exec($ch);
-        $error = curl_error($ch);
-
-        curl_close($ch);
-
-        if ($error) {
-            return ['error' => $error];
+        if ($result) {
+            $_SESSION['rest_result'] = $result;
         }
-
-        return json_decode($response, true);
     }
-
-    public function getUsers() {
-        return $this->sendRequest('/controllers/rest_server.php', 'GET');
-    }
-
-    public function getUserById($id) {
-        return $this->sendRequest('/controllers/rest_server.php?id=' . $id, 'GET');
-    }
-
-    public function createUser($data) {
-        return $this->sendRequest('/controllers/rest_server.php', 'POST', $data);
-    }
-
-    public function updateUser($data) {
-        return $this->sendRequest('/controllers/rest_server.php', 'PUT', $data);
-    }
-
-    public function deleteUser($id) {
-        return $this->sendRequest('/controllers/rest_server.php?id=' . $id, 'DELETE');
-    }
+} catch (Exception $e) {
+    $_SESSION['rest_error'] = 'REST Error: ' . $e->getMessage();
 }
 
-// Example usage
-$client = new RestClient('http://localhost/project');
-
-// Fetch all users
-echo "<h2>All Users:</h2>";
-print_r($client->getUsers());
-
-// Fetch a user by ID
-echo "<h2>Single User (ID = 1):</h2>";
-print_r($client->getUserById(1));
-
-// Create a new user
-$newUser = [
-    'name' => 'Client User',
-    'email' => 'clientuser@example.com',
-    'password' => 'clientpassword123',
-    'role' => 'ROLE_USER'
-];
-echo "<h2>Create User:</h2>";
-print_r($client->createUser($newUser));
-
-// Update an existing user
-$updateUser = [
-    'id' => 1,
-    'name' => 'Updated Client User',
-    'email' => 'updatedclient@example.com',
-    'role' => 'ROLE_ADMIN'
-];
-echo "<h2>Update User:</h2>";
-print_r($client->updateUser($updateUser));
-
-// Delete a user
-echo "<h2>Delete User (ID = 1):</h2>";
-print_r($client->deleteUser(1));
+// Redirect back to the RESTful client view
+header('Location: ' . SITE_ROOT . 'index.php?page=rest_client');
+exit;
