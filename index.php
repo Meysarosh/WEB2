@@ -52,11 +52,11 @@ switch ($page) {
 
     // RESTful functionality
     case 'rest_server':
-        require_once SERVER_ROOT . 'controllers/rest_server.php';
+        require_once SERVER_ROOT . 'views/rest_server.php';
         break;
 
     case 'rest_client':
-        require_once SERVER_ROOT . 'controllers/rest_client.php';
+        require_once SERVER_ROOT . 'views/rest_client.php';
         break;
 
     // Admin functionality
@@ -74,6 +74,10 @@ switch ($page) {
 
     case 'admin_delete_user':
         require_once SERVER_ROOT . 'views/admin/delete_user.php';
+        break;
+    
+    case 'generate_pdf':
+        require_once SERVER_ROOT . 'views/pdf_form.php';
         break;
 
     default:

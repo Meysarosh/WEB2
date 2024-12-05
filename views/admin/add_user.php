@@ -1,13 +1,15 @@
 <?php
-session_start();
-require '../../db.php';
+$title = 'Új felhasználó hozzáadása'; // Page title for layout
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ROLE_ADMIN') {
-    header("Location: ../dashboard.php");
+require_once __DIR__ . '/../../db.php';
+
+// Check if the user is an admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+    header("Location: index.php?page=home");
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
@@ -15,34 +17,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
     if ($stmt->execute([$name, $email, $password, $role])) {
-        header("Location: users.php");
+        header("Location: index.php?page=admin_users");
         exit;
     } else {
-        echo "Error adding user!";
+        echo "Hiba történt a felhasználó hozzáadása során!";
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add User</title>
-</head>
-<body>
-    <h1>Add New User</h1>
-    <a href="users.php">Back to User List</a>
-    <form method="POST">
-        <label>Name:</label><input type="text" name="name" required><br>
-        <label>Email:</label><input type="email" name="email" required><br>
-        <label>Password:</label><input type="password" name="password" required><br>
-        <label>Role:</label>
-        <select name="role" required>
-            <option value="ROLE_USER">User</option>
-            <option value="ROLE_ADMIN">Admin</option>
-        </select><br>
-        <button type="submit">Add User</button>
-    </form>
-</body>
-</html>
+<h1 class="text-center">Új felhasználó hozzáadása</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">Név:</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Jelszó:</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="mb-3">
+        <label for="role" class="form-label">Szerepkör:</label>
+        <select id="role" name="role" class="form-select">
+            <option value="ROLE_USER">Felhasználó</option>
+            <option value="ROLE_ADMIN">Adminisztrátor</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Hozzáadás</button>
+</form>

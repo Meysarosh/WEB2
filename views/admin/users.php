@@ -1,54 +1,43 @@
 <?php
-session_start();
-require '../../db.php';
+$title = 'Felhasználók kezelése'; // Page title for layout
+
+require_once __DIR__ . '/../../db.php';
 
 // Check if the user is an admin
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ROLE_ADMIN') {
-    header("Location: ../dashboard.php"); // Redirect to dashboard if not admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+    header("Location: index.php?page=home");
     exit;
 }
 
 // Fetch all users from the database
-$stmt = $pdo->query("SELECT * FROM users");
+$stmt = $pdo->query("SELECT id, name, email, role FROM users");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<h1 class="text-center">Felhasználók kezelése</h1>
+<a href="index.php?page=admin_add_user" class="btn btn-success mb-3">Új felhasználó hozzáadása</a>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title>
-</head>
-<body>
-    <h1>User Management</h1>
-    <a href="../dashboard.php">Back to Dashboard</a>
-    <a href="add_user.php">Add New User</a>
-
-    <table border="1">
-        <thead>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Név</th>
+            <th>Email</th>
+            <th>Szerepkör</th>
+            <th>Műveletek</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($users as $user): ?>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
+                <td><?php echo htmlspecialchars($user['id']); ?></td>
+                <td><?php echo htmlspecialchars($user['name']); ?></td>
+                <td><?php echo htmlspecialchars($user['email']); ?></td>
+                <td><?php echo htmlspecialchars($user['role']); ?></td>
+                <td>
+                    <a href="index.php?page=admin_edit_user&id=<?php echo $user['id']; ?>" class="btn btn-primary btn-sm">Módosítás</a>
+                    <a href="index.php?page=admin_delete_user&id=<?php echo $user['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Biztosan törölni szeretné?');">Törlés</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($users as $user): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($user['id']); ?></td>
-                    <td><?php echo htmlspecialchars($user['name']); ?></td>
-                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                    <td><?php echo htmlspecialchars($user['role']); ?></td>
-                    <td>
-                        <a href="edit_user.php?id=<?php echo $user['id']; ?>">Edit</a>
-                        <a href="delete_user.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure?');">Delete</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</body>
-</html>
+        <?php endforeach; ?>
+    </tbody>
+</table>
