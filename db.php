@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db = 'feladat';
-$user = 'root'; // replace with your username
-$pass = ''; // replace with your password
+$db = 'webprogbeadando';
+$user = 'webprogbeadando'; 
+$pass = 'Pro100Nethely'; 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
