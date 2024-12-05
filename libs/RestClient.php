@@ -34,22 +34,22 @@ class RestClient {
     }
 
     public function getUsers() {
-        return $this->sendRequest('/controllers/rest_server.php', 'GET');
+        return $this->sendRequest('/api/rest_server.php', 'GET');
     }
 
     public function getUserById($id) {
-        return $this->sendRequest('/controllers/rest_server.php?id=' . $id, 'GET');
+        return $this->sendRequest('/api/rest_server.php?id=' . $id, 'GET');
     }
 
     public function createUser($data) {
-        return $this->sendRequest('/controllers/rest_server.php', 'POST', $data);
+        return $this->sendRequest('/api/rest_server.php', 'POST', $data);
     }
 
     public function updateUser($data) {
-        return $this->sendRequest('/controllers/rest_server.php', 'PUT', $data);
+        return $this->sendRequest('/api/rest_server.php', 'PUT', $data);
     }
 
     public function deleteUser($id) {
-        return $this->sendRequest('/controllers/rest_server.php?id=' . $id, 'DELETE');
+        return $this->sendRequest('/api/rest_server.php?id=' . $id, 'DELETE');
     }
 }

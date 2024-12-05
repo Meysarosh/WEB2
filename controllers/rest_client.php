@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../config.php'; // Configuration file
-require_once SERVER_ROOT . 'libs/RestClient.php'; // Correct path to RestClient class
+require_once SERVER_ROOT . '/libs/RestClient.php'; // Correct path to RestClient class
 
 session_start();
 
