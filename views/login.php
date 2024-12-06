@@ -12,6 +12,8 @@ $title = 'Bejelentkezés'; // Page title for layout
     </div>
 <?php endif; ?>
 
+<div class="row">
+    <div class="col-md-6 mx-auto">
 <form action="controllers/login.php" method="POST" class="mt-4">
     <div class="mb-3">
         <label for="email" class="form-label">Email:</label>
@@ -23,3 +25,4 @@ $title = 'Bejelentkezés'; // Page title for layout
     </div>
     <button type="submit" class="btn btn-primary">Bejelentkezés</button>
 </form>
+</div></div>
